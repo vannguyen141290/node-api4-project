@@ -9,7 +9,11 @@ server.get('/', (req, res) => {
     res.send('<h1>Hello from THI NGUYEN</h1>')
 })
 
-const port = process.env.port || 3000
+// server.get('*', (req, res) => {
+//     res.status()
+// })
+
+const port = process.env.PORT || 3000
 
 server.listen(port, () => {
     console.log(`\n*** Server listening on port ${port} ***\n`)
