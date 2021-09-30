@@ -1,4 +1,5 @@
 const Users = require('./users-model')
+const yup = require('yup')
 
 function logger(req, res, next) {
     const timestamp = new Date().toLocaleString()
@@ -26,15 +27,27 @@ async function validateUserId(req, res, next) {
     }
 }
 
-function validateLoginUser(req, res, next) {
-    const username = req.body.username
-    const password = req.body.password
-    if(!username || !password) {
-        next({
-            message: 'username and password are required fields!'
-        })
-    } else {
+const loginSchema = yup.object().shape({
+    username: yup
+        .string()
+        .trim()
+        .required('username is required!'),
+    password: yup
+        .string()
+        .trim()
+        .required('password is required!')
+})
+
+async function validateLoginUser(req, res, next) {
+    try {
+        const validated = await loginSchema.validate(req.body)
+        req.body = validated
         next()
+    } catch (err) {
+        next({
+            status: 422,
+            message: err.message
+        })
     }
 }
 
