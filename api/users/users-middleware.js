@@ -1,5 +1,5 @@
 const Users = require('./users-model')
-const yup = require('yup')
+const userSchema = require('../../services/userSchema')
 
 function logger(req, res, next) {
     const timestamp = new Date().toLocaleString()
@@ -27,20 +27,9 @@ async function validateUserId(req, res, next) {
     }
 }
 
-const loginSchema = yup.object().shape({
-    username: yup
-        .string()
-        .trim()
-        .required('username is required!'),
-    password: yup
-        .string()
-        .trim()
-        .required('password is required!')
-})
-
-async function validateLoginUser(req, res, next) {
+async function validateUser(req, res, next) {
     try {
-        const validated = await loginSchema.validate(req.body)
+        const validated = await userSchema.validate(req.body)
         req.body = validated
         next()
     } catch (err) {
@@ -54,5 +43,5 @@ async function validateLoginUser(req, res, next) {
 module.exports = {
     logger,
     validateUserId,
-    validateLoginUser
+    validateUser
 }

@@ -1,10 +1,10 @@
 const express = require('express')
 const Users = require('./users-model')
-const { validateLoginUser } = require('./users-middleware')
+const { validateUser } = require('./users-middleware')
 
 const router = express.Router()
 
-router.post('/', validateLoginUser, async (req, res, next) => {
+router.post('/', validateUser, async (req, res, next) => {
     Users.login(req.body)
         .then(user => {
             if (user) {

@@ -1,4 +1,5 @@
 const users = require('../../db/fakeDb')
+const { nanoid } = require('nanoid')
 
 function findAll() {
     return Promise.resolve(users)
@@ -24,8 +25,19 @@ function login(data) {
     }
 }
 
-function register() {
-    return null
+function register(data) {
+    const { username } = data
+    if(users.find(user => user.username === username)) {
+        return Promise.resolve(null)
+    } else {
+        const newUser = {
+            username: data.username,
+            password: data.password,
+            id: nanoid()
+        }
+        users.push(newUser)
+        return Promise.resolve(newUser)
+    }
 }
 
 module.exports = {

@@ -1,10 +1,23 @@
 const express = require('express')
-const { register } = require('./users-model')
+const Users = require('./users-model')
+const { validateUser } = require('./users-middleware')
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    console.log(`REQUEST FROM ${req.originalUrl}`)
+router.post('/', validateUser, async (req, res, next) => {
+    try {
+        const newUser = await Users.register(req.body)
+        if(newUser) {
+            res.status(201).json(newUser)
+        } else {
+            next({
+                status: 400,
+                message: 'username already taken'
+            })
+        }
+    } catch (error) {
+        next(error)
+    }
 })
 
 module.exports = router
